@@ -89,7 +89,6 @@
             <button onclick="showSection('import')">Importar Excel</button>
         </nav>
 
-        <!-- DASHBOARD -->
         <section id="sec-dashboard" class="section active">
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-number" id="stat-total">0</div><div class="stat-label">Total Estudiantes</div></div>
@@ -101,7 +100,6 @@
             <div id="grade-stats"></div>
         </section>
 
-        <!-- MONITOREO EN TIEMPO REAL -->
         <section id="sec-monitor" class="section">
             <div class="live-indicator">
                 <span class="live-dot"></span>
@@ -122,14 +120,12 @@
             <div id="monitor-grades" style="margin-top: 1rem;"></div>
         </section>
 
-        <!-- RESULTADOS FINALES -->
         <section id="sec-results" class="section">
             <div id="results-status"></div>
             <button onclick="loadFinalResults()" class="refresh-btn" style="margin-bottom: 1rem;">🔄 Actualizar Resultados</button>
             <div id="final-results-content"></div>
         </section>
 
-        <!-- CONFIGURACIÓN COLEGIO -->
         <section id="sec-school" class="section">
             <h2>Configuración del Colegio</h2>
             <div class="card">
@@ -151,7 +147,6 @@
             </div>
         </section>
 
-        <!-- CANDIDATOS -->
         <section id="sec-candidates" class="section">
             <h2>Gestión de Candidatos</h2>
             <div class="card">
@@ -171,7 +166,6 @@
             <div id="candidates-list-admin"></div>
         </section>
 
-        <!-- ESTUDIANTES -->
         <section id="sec-students" class="section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
                 <h2>Gestión de Estudiantes</h2>
@@ -183,7 +177,6 @@
             <div id="students-table-container"></div>
         </section>
 
-        <!-- IMPORTAR EXCEL -->
         <section id="sec-import" class="section">
             <h2>Importar desde Excel</h2>
             <div class="card" style="background: #dbeafe; border-left: 4px solid #3b82f6;">
@@ -205,8 +198,6 @@
                     <p style="margin-top: 1rem; color: #64748b;" id="file-name">Ningún archivo seleccionado</p>
                 </div>
                 
-                <div id="import-debug" style="background: #f1f5f9; padding: 1rem; border-radius: 0.375rem; margin: 1rem 0; display: none; font-family: monospace; font-size: 0.875rem;"></div>
-                
                 <div id="import-preview"></div>
                 <button id="btn-import" onclick="importStudents()" class="btn btn-success" style="display: none; width: 100%; margin-top: 1rem;">✅ Importar Estudiantes</button>
                 <div id="import-result"></div>
@@ -223,7 +214,6 @@
 
         if (adminCode) document.getElementById('admin-code').value = adminCode;
 
-        // Preview de foto al escribir URL
         document.getElementById('new-candidate-photo')?.addEventListener('input', function(e) {
             const url = e.target.value;
             const preview = document.getElementById('new-photo-preview');
@@ -234,7 +224,6 @@
             }
         });
 
-        // Preview de logo al escribir URL
         document.getElementById('school-logo')?.addEventListener('input', function(e) {
             const url = e.target.value;
             const preview = document.getElementById('logo-preview');
@@ -266,7 +255,6 @@
             document.getElementById(`sec-${section}`).classList.add('active');
             event.target.classList.add('active');
             
-            // Limpiar intervalos anteriores
             if (monitorInterval) {
                 clearInterval(monitorInterval);
                 monitorInterval = null;
@@ -275,7 +263,6 @@
             if (section === 'dashboard') loadDashboard();
             if (section === 'monitor') {
                 loadMonitorData();
-                // Auto-actualizar cada 10 segundos
                 monitorInterval = setInterval(loadMonitorData, 10000);
             }
             if (section === 'results') loadFinalResults();
@@ -339,7 +326,6 @@
             } catch (err) { console.error('Error:', err); }
         }
 
-        // MONITOREO EN TIEMPO REAL
         async function loadMonitorData() {
             try {
                 const res = await fetch(`${API_URL}/monitor`, { headers: { 'x-admin-code': adminCode } });
@@ -347,30 +333,16 @@
                 
                 document.getElementById('monitor-last-update').textContent = `Última actualización: ${data.lastUpdate}`;
                 
-                // Resumen general
                 const summary = data.summary;
                 document.getElementById('monitor-summary').innerHTML = `
                     <div class="stats-grid" style="margin-bottom: 0;">
-                        <div class="stat-card">
-                            <div class="stat-number">${summary.total}</div>
-                            <div class="stat-label">Total Estudiantes</div>
-                        </div>
-                        <div class="stat-card" style="border-color: #10b981;">
-                            <div class="stat-number" style="color: #10b981;">${summary.voted}</div>
-                            <div class="stat-label">Han Votado ✓</div>
-                        </div>
-                        <div class="stat-card" style="border-color: #f59e0b;">
-                            <div class="stat-number" style="color: #f59e0b;">${summary.pending}</div>
-                            <div class="stat-label">Pendientes</div>
-                        </div>
-                        <div class="stat-card" style="border-color: #3b82f6;">
-                            <div class="stat-number">${summary.participation}%</div>
-                            <div class="stat-label">Participación</div>
-                        </div>
+                        <div class="stat-card"><div class="stat-number">${summary.total}</div><div class="stat-label">Total Estudiantes</div></div>
+                        <div class="stat-card" style="border-color: #10b981;"><div class="stat-number" style="color: #10b981;">${summary.voted}</div><div class="stat-label">Han Votado ✓</div></div>
+                        <div class="stat-card" style="border-color: #f59e0b;"><div class="stat-number" style="color: #f59e0b;">${summary.pending}</div><div class="stat-label">Pendientes</div></div>
+                        <div class="stat-card" style="border-color: #3b82f6;"><div class="stat-number">${summary.participation}%</div><div class="stat-label">Participación</div></div>
                     </div>
                 `;
                 
-                // Por curso (agrupado por grado)
                 const coursesByGrade = {};
                 data.courses.forEach(c => {
                     if (!coursesByGrade[c.grade]) coursesByGrade[c.grade] = [];
@@ -387,9 +359,7 @@
                                     <div class="monitor-card ${c.voted > 0 ? 'voted' : ''}">
                                         <div class="monitor-header">
                                             <span class="monitor-title">Curso ${c.course}</span>
-                                            <span style="color: ${c.participation === 100 ? '#10b981' : c.participation > 50 ? '#f59e0b' : '#ef4444'}; font-weight: bold;">
-                                                ${c.participation}%
-                                            </span>
+                                            <span style="color: ${c.participation === 100 ? '#10b981' : c.participation > 50 ? '#f59e0b' : '#ef4444'}; font-weight: bold;">${c.participation}%</span>
                                         </div>
                                         <div class="monitor-stats">
                                             <span>✓ ${c.voted} votaron</span>
@@ -407,18 +377,10 @@
                 }
                 document.getElementById('monitor-courses').innerHTML = coursesHTML || '<p>No hay datos de cursos</p>';
                 
-                // Por grado (tabla consolidada)
                 document.getElementById('monitor-grades').innerHTML = `
                     <table>
                         <thead>
-                            <tr>
-                                <th>Grado</th>
-                                <th>Total Estudiantes</th>
-                                <th>Han Votado</th>
-                                <th>Pendientes</th>
-                                <th>Participación</th>
-                                <th>Progreso</th>
-                            </tr>
+                            <tr><th>Grado</th><th>Total Estudiantes</th><th>Han Votado</th><th>Pendientes</th><th>Participación</th><th>Progreso</th></tr>
                         </thead>
                         <tbody>
                             ${data.grades.map(g => `
@@ -428,11 +390,7 @@
                                     <td style="color: #10b981; font-weight: 600;">${g.voted}</td>
                                     <td style="color: ${g.pending > 0 ? '#f59e0b' : '#64748b'};">${g.pending}</td>
                                     <td><strong>${g.participation}%</strong></td>
-                                    <td style="width: 200px;">
-                                        <div class="progress-bar" style="height: 20px;">
-                                            <div class="progress-fill" style="width: ${g.participation}%; background: ${g.participation === 100 ? '#10b981' : g.participation > 50 ? '#3b82f6' : '#f59e0b'};"></div>
-                                        </div>
-                                    </td>
+                                    <td style="width: 200px;"><div class="progress-bar" style="height: 20px;"><div class="progress-fill" style="width: ${g.participation}%; background: ${g.participation === 100 ? '#10b981' : g.participation > 50 ? '#3b82f6' : '#f59e0b'};"></div></div></td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -445,7 +403,6 @@
             }
         }
 
-        // RESULTADOS FINALES
         async function loadFinalResults() {
             try {
                 const res = await fetch(`${API_URL}/results`, { headers: { 'x-admin-code': adminCode } });
@@ -454,23 +411,13 @@
                 const container = document.getElementById('final-results-content');
                 const statusDiv = document.getElementById('results-status');
                 
-                // Verificar si la votación está cerrada
                 const statusRes = await fetch(`${API_URL}/check-status`);
                 const statusData = await statusRes.json();
                 
                 if (statusData.open) {
-                    statusDiv.innerHTML = `
-                        <div class="results-closed">
-                            ⚠️ <strong>La votación aún está abierta</strong><br>
-                            Los resultados finales se mostrarán cuando cierres la votación desde el Dashboard.
-                        </div>
-                    `;
+                    statusDiv.innerHTML = `<div class="results-closed">⚠️ <strong>La votación aún está abierta</strong><br>Los resultados finales se mostrarán cuando cierres la votación desde el Dashboard.</div>`;
                 } else {
-                    statusDiv.innerHTML = `
-                        <div class="results-open">
-                            ✅ <strong>Votación cerrada</strong> - Resultados oficiales
-                        </div>
-                    `;
+                    statusDiv.innerHTML = `<div class="results-open">✅ <strong>Votación cerrada</strong> - Resultados oficiales</div>`;
                 }
                 
                 if (data.totalVotes === 0) {
@@ -478,44 +425,20 @@
                     return;
                 }
                 
-                // Mostrar ganador(es)
                 let winnerHTML = '';
                 if (data.winners && data.winners.length > 0) {
                     if (data.isTie) {
-                        winnerHTML = `
-                            <div class="winner-card">
-                                <div class="winner-trophy">🏆</div>
-                                <h3>¡EMPATE!</h3>
-                                <p>Los ganadores con ${data.winners[0].votes} votos cada uno:</p>
-                                <h2>${data.winners.map(w => w.name).join(' / ')}</h2>
-                            </div>
-                        `;
+                        winnerHTML = `<div class="winner-card"><div class="winner-trophy">🏆</div><h3>¡EMPATE!</h3><p>Los ganadores con ${data.winners[0].votes} votos cada uno:</p><h2>${data.winners.map(w => w.name).join(' / ')}</h2></div>`;
                     } else {
-                        winnerHTML = `
-                            <div class="winner-card">
-                                <div class="winner-trophy">🏆</div>
-                                <h3>¡GANADOR!</h3>
-                                <h2>${data.winners[0].name}</h2>
-                                <p style="font-size: 1.25rem; margin-top: 0.5rem;">${data.winners[0].votes} votos (${data.winners[0].percentage}%)</p>
-                                ${data.winners[0].party ? `<p>Partido: ${data.winners[0].party}</p>` : ''}
-                            </div>
-                        `;
+                        winnerHTML = `<div class="winner-card"><div class="winner-trophy">🏆</div><h3>¡GANADOR!</h3><h2>${data.winners[0].name}</h2><p style="font-size: 1.25rem; margin-top: 0.5rem;">${data.winners[0].votes} votos (${data.winners[0].percentage}%)</p>${data.winners[0].party ? `<p>Partido: ${data.winners[0].party}</p>` : ''}</div>`;
                     }
                 }
                 
-                // Tabla de resultados completos
                 const resultsHTML = `
                     <h3>Resultados Detallados</h3>
                     <table>
                         <thead>
-                            <tr>
-                                <th>Posición</th>
-                                <th>Candidato</th>
-                                <th>Partido/Lista</th>
-                                <th>Votos</th>
-                                <th>Porcentaje</th>
-                                <th>Visual</th>
-                            </tr>
+                            <tr><th>Posición</th><th>Candidato</th><th>Partido/Lista</th><th>Votos</th><th>Porcentaje</th><th>Visual</th></tr>
                         </thead>
                         <tbody>
                             ${data.results.map((r, index) => `
@@ -525,11 +448,7 @@
                                     <td>${r.party || '-'}</td>
                                     <td style="font-size: 1.1rem;">${r.votes}</td>
                                     <td><strong>${r.percentage}%</strong></td>
-                                    <td style="width: 150px;">
-                                        <div class="progress-bar" style="height: 20px;">
-                                            <div class="progress-fill" style="width: ${r.percentage}%; background: ${index === 0 ? '#f59e0b' : index === 1 ? '#64748b' : index === 2 ? '#b45309' : '#3b82f6'};"></div>
-                                        </div>
-                                    </td>
+                                    <td style="width: 150px;"><div class="progress-bar" style="height: 20px;"><div class="progress-fill" style="width: ${r.percentage}%; background: ${index === 0 ? '#f59e0b' : index === 1 ? '#64748b' : index === 2 ? '#b45309' : '#3b82f6'};"></div></div></td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -538,22 +457,10 @@
                     <div class="card" style="margin-top: 2rem; text-align: center;">
                         <h3>Estadísticas de la Elección</h3>
                         <div class="stats-grid" style="margin-top: 1rem;">
-                            <div class="stat-card">
-                                <div class="stat-number">${data.totalVotes}</div>
-                                <div class="stat-label">Total Votos Válidos</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">${data.totalStudents}</div>
-                                <div class="stat-label">Electores Habilitados</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">${data.totalVoted}</div>
-                                <div class="stat-label">Votantes Efectivos</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">${data.participation}%</div>
-                                <div class="stat-label">Participación</div>
-                            </div>
+                            <div class="stat-card"><div class="stat-number">${data.totalVotes}</div><div class="stat-label">Total Votos Válidos</div></div>
+                            <div class="stat-card"><div class="stat-number">${data.totalStudents}</div><div class="stat-label">Electores Habilitados</div></div>
+                            <div class="stat-card"><div class="stat-number">${data.totalVoted}</div><div class="stat-label">Votantes Efectivos</div></div>
+                            <div class="stat-card"><div class="stat-number">${data.participation}%</div><div class="stat-label">Participación</div></div>
                         </div>
                     </div>
                     
@@ -682,7 +589,6 @@
             catch (err) { alert('Error'); }
         }
 
-        // IMPORTACIÓN DE EXCEL CORREGIDA
         document.getElementById('excel-file')?.addEventListener('change', handleFileSelect);
 
         function handleFileSelect(e) {
@@ -690,7 +596,6 @@
             if (!file) return;
             
             document.getElementById('file-name').textContent = file.name;
-            document.getElementById('import-debug').style.display = 'none';
             
             const reader = new FileReader();
             
@@ -699,9 +604,7 @@
                     let data;
                     const fileData = e.target.result;
                     
-                    // Detectar si es CSV o Excel
                     if (file.name.endsWith('.csv')) {
-                        // Procesar CSV
                         const text = new TextDecoder('utf-8').decode(fileData);
                         const lines = text.split('\n');
                         const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
@@ -716,72 +619,56 @@
                         }
                         data = rows;
                     } else {
-                        // Procesar Excel
                         const workbook = XLSX.read(fileData, { type: 'array' });
                         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                         data = XLSX.utils.sheet_to_json(firstSheet);
                     }
                     
-                    console.log('Datos crudos del archivo:', data);
-                    document.getElementById('import-debug').style.display = 'block';
-                    document.getElementById('import-debug').textContent = 'Columnas detectadas: ' + Object.keys(data[0] || {}).join(', ');
-                    
                     processExcelData(data);
                     
                 } catch (err) { 
-                    console.error('Error:', err);
                     alert('Error al leer archivo: ' + err.message); 
                 }
             };
             
-            if (file.name.endsWith('.csv')) {
-                reader.readAsArrayBuffer(file);
-            } else {
-                reader.readAsArrayBuffer(file);
-            }
+            reader.readAsArrayBuffer(file);
         }
 
         function processExcelData(data) {
             if (!Array.isArray(data) || data.length === 0) {
                 alert('El archivo está vacío o no tiene el formato correcto');
+                excelData = [];
                 return;
             }
 
-            // Mapear con flexibilidad de nombres de columnas
             const mapped = data.map((row, index) => {
-                // Buscar campos con diferentes posibles nombres
                 const findField = (possibleNames) => {
                     for (const name of possibleNames) {
-                        // Buscar exacto
                         if (row[name] !== undefined) return row[name];
-                        // Buscar case-insensitive
-                        const key = Object.keys(row).find(k => k.toLowerCase() === name.toLowerCase());
+                        const key = Object.keys(row).find(k => k.toLowerCase().trim() === name.toLowerCase());
                         if (key) return row[key];
                     }
                     return undefined;
                 };
 
-                const nombre = findField(['Nombre', 'Name', 'Estudiante', 'Alumno', 'Apellidos y Nombres', 'Apellido y Nombre', 'APELLIDOS Y NOMBRES', 'APELLIDO Y NOMBRE', 'Estudiante']);
-                const grado = findField(['Grado', 'Grade', 'Nivel', 'Curso', 'Año', 'GRADO', 'Grado/Nivel']);
-                const curso = findField(['Curso', 'Paralelo', 'Sección', 'Seccion', 'Aula', 'Course', 'CURSO', 'PARALELO', 'SECCION']);
-                const lista = findField(['Lista', 'List', 'Número', 'Numero', 'No', 'No.', 'Nro', 'Nro.', 'LISTA', 'NÚMERO', 'NUMERO']);
+                const nombre = findField(['Nombre', 'Name', 'Estudiante', 'Alumno', 'Apellidos y Nombres', 'Apellido y Nombre', 'APELLIDOS Y NOMBRES', 'APELLIDO Y NOMBRE', 'Alumno']);
+                const grado = findField(['Grado', 'Grade', 'Nivel', 'Curso', 'Año', 'GRADO', 'Grado/Nivel', 'NIVEL']);
+                const curso = findField(['Curso', 'Paralelo', 'Sección', 'Seccion', 'Aula', 'Course', 'CURSO', 'PARALELO', 'SECCION', 'SECCION']);
+                const lista = findField(['Lista', 'List', 'Número', 'Numero', 'No', 'No.', 'Nro', 'Nro.', 'LISTA', 'NÚMERO', 'NUMERO', 'Num']);
 
                 return {
                     full_name: nombre ? String(nombre).trim() : '',
                     grade: parseInt(grado) || 0,
                     course: parseInt(curso) || 1,
-                    list_number: parseInt(lista) || (index + 1),
-                    _original: row
+                    list_number: parseInt(lista) || (index + 1)
                 };
             }).filter(s => s.full_name && s.grade > 0);
 
-            console.log('Mapeados:', mapped);
-            
             excelData = mapped;
             
             const preview = document.getElementById('import-preview');
             if (mapped.length === 0) {
-                preview.innerHTML = '<p style="color: #ef4444;">⚠️ No se encontraron estudiantes válidos. Verifica que las columnas tengan los nombres correctos.</p>';
+                preview.innerHTML = `<div style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.5rem;"><strong>⚠️ No se encontraron estudiantes válidos</strong><br>Columnas detectadas: ${Object.keys(data[0] || {}).join(', ')}</div>`;
                 document.getElementById('btn-import').style.display = 'none';
                 return;
             }
@@ -791,15 +678,9 @@
                     ✅ <strong>${mapped.length} estudiantes válidos encontrados</strong> de ${data.length} filas
                 </div>
                 <h4>Vista previa (primeros 5):</h4>
-                <table style="margin-top: 0.5rem; font-size: 0.875rem;">
+                <table style="margin-top: 0.5rem; font-size: 0.875rem; width: 100%;">
                     <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Grado</th>
-                            <th>Curso</th>
-                            <th>Lista</th>
-                            <th>Código que se generará</th>
-                        </tr>
+                        <tr><th>Nombre</th><th>Grado</th><th>Curso</th><th>Lista</th><th>Código</th></tr>
                     </thead>
                     <tbody>
                         ${mapped.slice(0, 5).map(s => `
@@ -811,54 +692,62 @@
                                 <td><code style="background: #e2e8f0; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">${s.grade}${s.course}${String(s.list_number).padStart(2, '0')}</code></td>
                             </tr>
                         `).join('')}
-                        ${mapped.length > 5 ? `<tr><td colspan="5" style="text-align: center; color: #64748b;">... y ${mapped.length - 5} más</td></tr>` : ''}
+                        ${mapped.length > 5 ? `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 0.5rem;">... y ${mapped.length - 5} más</td></tr>` : ''}
                     </tbody>
                 </table>
             `;
+            
             document.getElementById('btn-import').style.display = 'block';
         }
 
         async function importStudents() {
-            if (excelData.length === 0) return;
+            if (!excelData || excelData.length === 0) {
+                alert('No hay datos para importar. Selecciona un archivo primero.');
+                return;
+            }
             
             const btn = document.getElementById('btn-import'); 
             btn.disabled = true; 
-            btn.innerHTML = '<span class="loading" style="display: inline-block; width: 16px; height: 16px; border: 2px solid #ffffff; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 0.5rem;"></span> Importando...';
+            btn.textContent = '⏳ Importando...';
             
             try {
-                console.log('Enviando:', excelData);
+                const studentsToSend = excelData.map(s => ({
+                    full_name: String(s.full_name || '').trim(),
+                    grade: parseInt(s.grade) || 0,
+                    course: parseInt(s.course) || 1,
+                    list_number: parseInt(s.list_number) || 1
+                })).filter(s => s.full_name && s.grade > 0);
                 
                 const res = await fetch(`${API_URL}/admin/import`, { 
                     method: 'POST', 
-                    headers: { 'Content-Type': 'application/json', 'x-admin-code': adminCode }, 
-                    body: JSON.stringify({ students: excelData, admin_code: adminCode }) 
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'x-admin-code': adminCode 
+                    }, 
+                    body: JSON.stringify({ 
+                        students: studentsToSend,
+                        admin_code: adminCode 
+                    }) 
                 });
                 
                 const result = await res.json();
-                console.log('Respuesta:', result);
                 
                 const resultDiv = document.getElementById('import-result');
                 
-                if (!res.ok) {
-                    resultDiv.innerHTML = `<div class="card" style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; margin-top: 1rem;">
-                        <strong>Error:</strong> ${result.error || 'Error desconocido'}<br>
-                        ${result.details ? `<small>${result.details.join('<br>')}</small>` : ''}
-                    </div>`;
+                if (!res.ok || !result.success) {
+                    resultDiv.innerHTML = `
+                        <div style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                            <strong>❌ Error:</strong> ${result.error || 'Error desconocido'}
+                        </div>
+                    `;
                     return;
                 }
                 
                 resultDiv.innerHTML = `
-                    <div class="card" style="background: ${result.hasErrors ? '#fef3c7' : '#dcfce7'}; border: 2px solid ${result.hasErrors ? '#f59e0b' : '#22c55e'}; margin-top: 1rem;">
-                        <h4>✅ Importación completada</h4>
-                        <p><strong>Importados:</strong> ${result.imported} de ${result.total} estudiantes</p>
-                        <p><strong>Válidos encontrados:</strong> ${result.valid}</p>
-                        ${result.hasErrors ? `<p style="color: #92400e;"><strong>Advertencias:</strong> ${result.errors.length} filas con problemas</p>
-                        <details>
-                            <summary>Ver detalles</summary>
-                            <ul style="margin-top: 0.5rem; font-size: 0.875rem;">
-                                ${result.errors.map(e => `<li>${e}</li>`).join('')}
-                            </ul>
-                        </details>` : ''}
+                    <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                        <h4>✅ Importación exitosa</h4>
+                        <p><strong>Importados:</strong> ${result.imported} estudiantes</p>
+                        ${result.errors && result.errors.length > 0 ? `<details style="margin-top: 0.5rem;"><summary>Ver advertencias (${result.errors.length})</summary><ul style="margin-top: 0.5rem; font-size: 0.875rem;">${result.errors.slice(0, 10).map(e => `<li>${e}</li>`).join('')}</ul></details>` : ''}
                     </div>
                 `;
                 
@@ -866,13 +755,14 @@
                     excelData = []; 
                     document.getElementById('btn-import').style.display = 'none'; 
                     document.getElementById('excel-file').value = '';
+                    document.getElementById('file-name').textContent = 'Ningún archivo seleccionado';
+                    document.getElementById('import-preview').innerHTML = '';
                 }
                 
             } catch (err) { 
-                console.error('Error:', err);
                 document.getElementById('import-result').innerHTML = `
-                    <div class="card" style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; margin-top: 1rem;">
-                        <strong>Error de conexión:</strong> ${err.message}
+                    <div style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                        <strong>❌ Error de conexión:</strong> ${err.message}
                     </div>
                 `;
             } finally { 
