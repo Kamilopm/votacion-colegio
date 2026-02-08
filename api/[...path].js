@@ -32,14 +32,13 @@ export default async function handler(req, res) {
       case 'admin': return await handleAdmin(req, res, subEndpoint);
       case 'stats': return await getStats(req, res);
       case 'config': return await handleConfig(req, res);
-      case 'carnets': return await generateCarnets(req, res);
       case 'results': return await getFinalResults(req, res);
       case 'monitor': return await getMonitorData(req, res);
       default: return res.status(404).json({ error: 'Endpoint no encontrado' });
     }
   } catch (error) {
     console.error('Error:', error);
-    return res.status(500).json({ error: 'Error interno del servidor', details: error.message });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 }
 
@@ -106,24 +105,8 @@ async function handleConfig(req, res) {
   return res.status(405).json({ error: 'Método no permitido' });
 }
 
-async function generateCarnets(req, res) {
-  const adminCode = req.headers['x-admin-code'];
-  const { data: config } = await supabase.from('config').select('admin_code, school_logo_url, school_name').eq('id', 1).single();
-  if (!config || adminCode !== config.admin_code) return res.status(401).json({ error: 'No autorizado' });
-  
-  const { data: students } = await supabase.from('students').select('full_name, grade, course, list_number, access_code').order('grade').order('course').order('list_number');
-  if (!students) return res.status(500).json({ error: 'Error al cargar estudiantes' });
-  
-  return res.status(200).json({ 
-    students, 
-    school_logo: config.school_logo_url,
-    school_name: config.school_name
-  });
-}
-
 async function getFinalResults(req, res) {
   try {
-    // Verificar si hay votos
     const { data: totalVotes } = await supabase.from('candidates').select('votes');
     const sumVotes = totalVotes?.reduce((a, b) => a + (b.votes || 0), 0) || 0;
     
@@ -137,15 +120,10 @@ async function getFinalResults(req, res) {
       });
     }
 
-    // Resultados por candidato
     const { data: results } = await supabase.from('election_results').select('*');
-    
-    // Estadísticas generales
-    const { data: studentsData } = await supabase.from('students').select('has_voted', { count: 'exact' });
     const { count: totalStudents } = await supabase.from('students').select('*', { count: 'exact', head: true });
     const { count: votedStudents } = await supabase.from('students').select('*', { count: 'exact', head: true }).eq('has_voted', true);
     
-    // Ganador(es)
     const maxVotes = Math.max(...results.map(r => r.votes));
     const winners = results.filter(r => r.votes === maxVotes && r.votes > 0);
 
@@ -170,38 +148,24 @@ async function getMonitorData(req, res) {
   if (!config || adminCode !== config.admin_code) return res.status(401).json({ error: 'No autorizado' });
 
   try {
-    // Datos por grado y curso (detalle completo)
-    const { data: students } = await supabase
-      .from('students')
-      .select('grade, course, has_voted')
-      .order('grade')
-      .order('course');
-
-    // Agrupar por grado y curso
-    const monitorData = {};
+    const { data: students } = await supabase.from('students').select('grade, course, has_voted').order('grade').order('course');
     
+    const monitorData = {};
     students.forEach(s => {
       const key = `${s.grade}-${s.course}`;
       if (!monitorData[key]) {
-        monitorData[key] = {
-          grade: s.grade,
-          course: s.course,
-          total: 0,
-          voted: 0
-        };
+        monitorData[key] = { grade: s.grade, course: s.course, total: 0, voted: 0 };
       }
       monitorData[key].total++;
       if (s.has_voted) monitorData[key].voted++;
     });
 
-    // Convertir a array y calcular porcentajes
     const courses = Object.values(monitorData).map(c => ({
       ...c,
       pending: c.total - c.voted,
       participation: c.total > 0 ? Math.round((c.voted / c.total) * 100) : 0
     }));
 
-    // Resumen por grado (solo totales)
     const gradeSummary = {};
     courses.forEach(c => {
       if (!gradeSummary[c.grade]) {
@@ -217,7 +181,6 @@ async function getMonitorData(req, res) {
       participation: g.total > 0 ? Math.round((g.voted / g.total) * 100) : 0
     })).sort((a, b) => a.grade - b.grade);
 
-    // Totales generales
     const totalGeneral = grades.reduce((acc, g) => ({ total: acc.total + g.total, voted: acc.voted + g.voted }), { total: 0, voted: 0 });
 
     return res.status(200).json({
@@ -325,18 +288,16 @@ async function importStudents(req, res) {
     return res.status(400).json({ error: 'No hay estudiantes para importar' });
   }
 
-  // Validar y limpiar datos
   const validStudents = [];
   const errors = [];
 
   for (let i = 0; i < students.length; i++) {
     const s = students[i];
     
-    // Buscar campos posibles (flexibilidad en nombres de columnas)
-    const nombre = s.Nombre || s.nombre || s.Name || s.name || s.Estudiante || s.estudiante || s['Nombre Completo'] || s['nombre completo'];
-    const grado = s.Grado || s.grado || s.Grade || s.grade || s.Curso || s.curso || s['Grado/Nivel'];
-    const curso = s.Curso || s.curso || s.Course || s.course || s.Paralelo || s.paralelo || s.Sección || s.sección || s.Aula || s.aula;
-    const lista = s.Lista || s.lista || s.List || s.list || s.Número || s.número || s.Numero || s.numero || s.No || s.no;
+    const nombre = s.full_name || s.Nombre || s.nombre || s.Name || s.name || s.Estudiante || s.estudiante;
+    const grado = s.grade || s.Grado || s.grado || s.Grade || s.grade;
+    const curso = s.course || s.Curso || s.curso || s.Course || s.course || s.paralelo || s.Paralelo || 1;
+    const lista = s.list_number || s.Lista || s.lista || s.List || s.list || s.Numero || s.numero || s['No.'] || (i + 1);
 
     if (!nombre || !grado) {
       errors.push(`Fila ${i + 1}: Falta nombre o grado`);
@@ -361,7 +322,6 @@ async function importStudents(req, res) {
   }
 
   console.log('Estudiantes válidos:', validStudents.length);
-  console.log('Errores:', errors);
 
   if (validStudents.length === 0) {
     return res.status(400).json({ 
@@ -370,7 +330,6 @@ async function importStudents(req, res) {
     });
   }
 
-  // Insertar en bloques de 50
   const batchSize = 50;
   let inserted = 0;
   const insertErrors = [];
@@ -379,14 +338,10 @@ async function importStudents(req, res) {
     const batch = validStudents.slice(i, i + batchSize);
     
     try {
-      const { data, error } = await supabase
-        .from('students')
-        .insert(batch)
-        .select('id, full_name, grade, course, list_number, access_code');
+      const { data, error } = await supabase.from('students').insert(batch).select('id, full_name, grade, course, list_number, access_code');
 
       if (error) {
         console.error('Error en batch:', error);
-        // Intentar uno por uno
         for (const student of batch) {
           const { error: singleError } = await supabase.from('students').insert(student);
           if (singleError) {
@@ -397,7 +352,6 @@ async function importStudents(req, res) {
         }
       } else {
         inserted += data.length;
-        console.log(`Insertados ${data.length} en batch`);
       }
     } catch (err) {
       console.error('Error excepción:', err);
