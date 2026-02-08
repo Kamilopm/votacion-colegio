@@ -8,28 +8,28 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #1e293b; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
         .login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .login-box { background: white; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 400px; }
         .login-box h2 { margin-bottom: 1rem; }
         .login-box input { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 2px solid #e2e8f0; border-radius: 0.375rem; }
         .btn { display: inline-block; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: #3b82f6; color: white; width: 100%; }
+        .btn-primary { background: #3b82f6; color: white; }
         .btn-danger { background: #ef4444; color: white; }
         .btn-warning { background: #f59e0b; color: white; }
         .btn-success { background: #10b981; color: white; }
         .btn-secondary { background: #64748b; color: white; }
         .header { background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .admin-nav { background: #1e293b; padding: 1rem; margin: 0 -1rem 2rem -1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
-        .admin-nav button { background: #334155; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; }
+        .admin-nav { background: #1e293b; padding: 1rem; margin: 0 -1rem 2rem -1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .admin-nav button { background: #334155; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem; }
         .admin-nav button.active { background: #3b82f6; }
-        .section { display: none; background: white; padding: 1.5rem; border-radius: 0.5rem; }
+        .section { display: none; background: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem; }
         .section.active { display: block; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
         .stat-card { background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; border: 2px solid #e2e8f0; }
         .stat-number { font-size: 2.5rem; font-weight: bold; color: #3b82f6; }
         .stat-label { color: #64748b; margin-top: 0.5rem; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 0.5rem; overflow: hidden; margin-top: 1rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 0.5rem; overflow: hidden; margin-top: 1rem; font-size: 0.9rem; }
         th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
         th { background: #f8fafc; font-weight: 600; }
         .import-area { border: 2px dashed #cbd5e1; padding: 2rem; text-align: center; border-radius: 0.5rem; margin: 1rem 0; }
@@ -39,69 +39,24 @@
         .card { background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; }
         .candidate-photo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; }
         .photo-preview { max-width: 200px; max-height: 200px; border-radius: 0.5rem; margin: 0.5rem 0; }
-        .carnet-preview { 
-            width: 323px; 
-            height: 204px; 
-            border: 2px solid #333; 
-            border-radius: 12px; 
-            padding: 16px; 
-            background: white;
-            margin: 10px;
-            display: inline-block;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .carnet-header { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            border-bottom: 2px solid #3b82f6; 
-            padding-bottom: 8px; 
-            margin-bottom: 12px;
-        }
-        .carnet-logo { width: 40px; height: 40px; object-fit: contain; }
-        .carnet-school { font-size: 12px; font-weight: bold; color: #1e40af; flex: 1; }
-        .carnet-title { font-size: 10px; color: #64748b; text-transform: uppercase; }
-        .carnet-body { display: flex; gap: 12px; }
-        .carnet-photo { 
-            width: 80px; 
-            height: 100px; 
-            background: #e2e8f0; 
-            border-radius: 4px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: #64748b;
-            font-size: 10px;
-            text-align: center;
-        }
-        .carnet-info { flex: 1; font-size: 11px; }
-        .carnet-name { font-size: 14px; font-weight: bold; color: #1e293b; margin-bottom: 4px; }
-        .carnet-code { 
-            background: #1e40af; 
-            color: white; 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            font-size: 16px; 
-            font-weight: bold;
-            text-align: center;
-            margin-top: 8px;
-        }
-        .carnet-footer { 
-            position: absolute; 
-            bottom: 8px; 
-            right: 8px; 
-            font-size: 8px; 
-            color: #94a3b8;
-        }
-        .print-area { display: none; }
-        @media print {
-            .no-print { display: none !important; }
-            .print-area { display: block !important; }
-            .carnet-preview { page-break-inside: avoid; margin: 5px; }
-        }
-        .school-config { background: #dbeafe; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .monitor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .monitor-card { background: white; border: 2px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; }
+        .monitor-card.voted { border-color: #10b981; background: #f0fdf4; }
+        .monitor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .monitor-title { font-weight: bold; color: #1e293b; }
+        .monitor-stats { display: flex; gap: 1rem; font-size: 0.875rem; color: #64748b; }
+        .live-indicator { display: inline-flex; align-items: center; gap: 0.5rem; color: #10b981; font-size: 0.875rem; margin-bottom: 1rem; }
+        .live-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .winner-card { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 0.75rem; padding: 1.5rem; text-align: center; margin: 1rem 0; }
+        .winner-trophy { font-size: 3rem; margin-bottom: 0.5rem; }
+        .results-closed { background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .results-open { background: #dcfce7; border: 2px solid #22c55e; color: #166534; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .grade-section { margin-bottom: 1.5rem; }
+        .grade-title { font-size: 1.25rem; font-weight: bold; color: #1e40af; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; }
+        .refresh-btn { background: #3b82f6; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; margin-bottom: 1rem; }
+        .refresh-btn:hover { background: #2563eb; }
+        .last-update { color: #64748b; font-size: 0.875rem; margin-top: 0.5rem; }
     </style>
 </head>
 <body>
@@ -110,7 +65,7 @@
             <h2>🔐 Acceso Administrativo</h2>
             <p>Ingresa el código de administrador</p>
             <input type="password" id="admin-code" placeholder="Código admin">
-            <button onclick="login()" class="btn btn-primary">Ingresar</button>
+            <button onclick="login()" class="btn btn-primary" style="width: 100%;">Ingresar</button>
             <p id="login-error" style="color: #ef4444; margin-top: 1rem;"></p>
         </div>
     </div>
@@ -126,13 +81,15 @@
 
         <nav class="admin-nav">
             <button onclick="showSection('dashboard')" class="active">Dashboard</button>
+            <button onclick="showSection('monitor')">Monitoreo</button>
+            <button onclick="showSection('results')">Resultados</button>
             <button onclick="showSection('school')">Colegio</button>
             <button onclick="showSection('candidates')">Candidatos</button>
             <button onclick="showSection('students')">Estudiantes</button>
             <button onclick="showSection('import')">Importar Excel</button>
-            <button onclick="showSection('carnets')">Carnets</button>
         </nav>
 
+        <!-- DASHBOARD -->
         <section id="sec-dashboard" class="section active">
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-number" id="stat-total">0</div><div class="stat-label">Total Estudiantes</div></div>
@@ -142,13 +99,40 @@
             </div>
             <h3>Participación por Grado</h3>
             <div id="grade-stats"></div>
-            <h3 style="margin-top: 2rem;">Resultados</h3>
-            <div id="results-list"></div>
         </section>
 
+        <!-- MONITOREO EN TIEMPO REAL -->
+        <section id="sec-monitor" class="section">
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                <span>Monitoreo en tiempo real</span>
+            </div>
+            <button onclick="loadMonitorData()" class="refresh-btn">🔄 Actualizar ahora</button>
+            <div class="last-update" id="monitor-last-update"></div>
+            
+            <div class="card" style="margin-top: 1rem;">
+                <h3>Resumen General</h3>
+                <div id="monitor-summary" style="margin-top: 1rem;"></div>
+            </div>
+
+            <h3 style="margin-top: 1.5rem;">Detalle por Grado y Curso</h3>
+            <div id="monitor-courses" style="margin-top: 1rem;"></div>
+            
+            <h3 style="margin-top: 1.5rem;">Por Grado (Consolidado)</h3>
+            <div id="monitor-grades" style="margin-top: 1rem;"></div>
+        </section>
+
+        <!-- RESULTADOS FINALES -->
+        <section id="sec-results" class="section">
+            <div id="results-status"></div>
+            <button onclick="loadFinalResults()" class="refresh-btn" style="margin-bottom: 1rem;">🔄 Actualizar Resultados</button>
+            <div id="final-results-content"></div>
+        </section>
+
+        <!-- CONFIGURACIÓN COLEGIO -->
         <section id="sec-school" class="section">
             <h2>Configuración del Colegio</h2>
-            <div class="school-config">
+            <div class="card">
                 <h3>Escudo y Nombre del Colegio</h3>
                 <p style="margin-bottom: 1rem; color: #64748b;">Estos datos aparecerán en los carnets y en la página de votación.</p>
                 
@@ -167,6 +151,7 @@
             </div>
         </section>
 
+        <!-- CANDIDATOS -->
         <section id="sec-candidates" class="section">
             <h2>Gestión de Candidatos</h2>
             <div class="card">
@@ -186,6 +171,7 @@
             <div id="candidates-list-admin"></div>
         </section>
 
+        <!-- ESTUDIANTES -->
         <section id="sec-students" class="section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
                 <h2>Gestión de Estudiantes</h2>
@@ -197,44 +183,34 @@
             <div id="students-table-container"></div>
         </section>
 
+        <!-- IMPORTAR EXCEL -->
         <section id="sec-import" class="section">
             <h2>Importar desde Excel</h2>
-            <div class="card">
-                <p><strong>Formato esperado:</strong></p>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-                    <li>Columnas: Nombre, Grado, Curso, Lista (opcional)</li>
-                    <li>Formatos: .xlsx, .xls, .csv</li>
+            <div class="card" style="background: #dbeafe; border-left: 4px solid #3b82f6;">
+                <h4>📋 Instrucciones</h4>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>El archivo puede ser <strong>.xlsx, .xls o .csv</strong></li>
+                    <li>La primera fila debe tener los títulos de columnas</li>
+                    <li>Columnas reconocidas automáticamente: <strong>Nombre, Grado, Curso, Lista</strong></li>
+                    <li>No importa el orden de las columnas</li>
+                    <li>Si no hay columna "Lista", se asigna automáticamente</li>
                 </ul>
+            </div>
+            
+            <div class="card">
+                <h3>Seleccionar Archivo</h3>
                 <div class="import-area">
                     <input type="file" id="excel-file" accept=".xlsx,.xls,.csv" style="display: none;">
-                    <button onclick="document.getElementById('excel-file').click()" class="btn btn-primary">Seleccionar Archivo</button>
-                    <p style="margin-top: 1rem; color: #64748b;" id="file-name"></p>
+                    <button onclick="document.getElementById('excel-file').click()" class="btn btn-primary" style="width: auto;">📁 Seleccionar Archivo Excel</button>
+                    <p style="margin-top: 1rem; color: #64748b;" id="file-name">Ningún archivo seleccionado</p>
                 </div>
+                
+                <div id="import-debug" style="background: #f1f5f9; padding: 1rem; border-radius: 0.375rem; margin: 1rem 0; display: none; font-family: monospace; font-size: 0.875rem;"></div>
+                
                 <div id="import-preview"></div>
-                <button id="btn-import" onclick="importStudents()" class="btn btn-success" style="display: none; width: 100%;">Importar Estudiantes</button>
+                <button id="btn-import" onclick="importStudents()" class="btn btn-success" style="display: none; width: 100%; margin-top: 1rem;">✅ Importar Estudiantes</button>
                 <div id="import-result"></div>
             </div>
-        </section>
-
-        <section id="sec-carnets" class="section">
-            <h2>Generación de Carnets</h2>
-            <div class="card no-print">
-                <p>Los carnets tienen formato tamaño cédula (85.6 × 53.98 mm) listos para imprimir.</p>
-                <p style="margin: 1rem 0; color: #64748b;">
-                    <strong>Instrucciones:</strong><br>
-                    1. Configura el escudo del colegio en la pestaña "Colegio"<br>
-                    2. Importa los estudiantes<br>
-                    3. Haz clic en "Generar Carnets"<br>
-                    4. Imprime en papel fotográfico o cartulina<br>
-                    5. Recorta con cuidado
-                </p>
-                <button onclick="generateCarnets()" class="btn btn-primary">Generar Carnets</button>
-                <button onclick="window.print()" class="btn btn-secondary" style="margin-left: 0.5rem;">Imprimir</button>
-            </div>
-            
-            <div id="carnets-container" class="no-print" style="margin-top: 2rem;"></div>
-            
-            <div id="print-area" class="print-area"></div>
         </section>
     </div>
 
@@ -243,6 +219,7 @@
         let adminCode = localStorage.getItem('admin_code') || '';
         let excelData = [];
         let schoolConfig = {};
+        let monitorInterval = null;
 
         if (adminCode) document.getElementById('admin-code').value = adminCode;
 
@@ -288,7 +265,20 @@
             document.querySelectorAll('.admin-nav button').forEach(b => b.classList.remove('active'));
             document.getElementById(`sec-${section}`).classList.add('active');
             event.target.classList.add('active');
+            
+            // Limpiar intervalos anteriores
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+                monitorInterval = null;
+            }
+            
             if (section === 'dashboard') loadDashboard();
+            if (section === 'monitor') {
+                loadMonitorData();
+                // Auto-actualizar cada 10 segundos
+                monitorInterval = setInterval(loadMonitorData, 10000);
+            }
+            if (section === 'results') loadFinalResults();
             if (section === 'students') loadStudents();
             if (section === 'candidates') loadCandidates();
             if (section === 'school') loadSchoolConfig();
@@ -346,15 +336,238 @@
                         <div class="progress-bar"><div class="progress-fill" style="width: ${g.participation_percent}%"></div></div>
                     </div>
                 `).join('');
-
-                const resultsContainer = document.getElementById('results-list');
-                if (data.results && data.results.length > 0) {
-                    const maxVotes = Math.max(...data.results.map(r => r.votes));
-                    resultsContainer.innerHTML = `<table><thead><tr><th>Candidato</th><th>Partido</th><th>Votos</th><th>%</th></tr></thead><tbody>
-                        ${data.results.map(r => `<tr style="${r.votes === maxVotes && r.votes > 0 ? 'background: #ecfdf5;' : ''}"><td><strong>${r.name}</strong></td><td>${r.party || '-'}</td><td>${r.votes}</td><td>${r.percentage}%</td></tr>`).join('')}
-                    </tbody></table>`;
-                } else { resultsContainer.innerHTML = '<p>No hay candidatos registrados</p>'; }
             } catch (err) { console.error('Error:', err); }
+        }
+
+        // MONITOREO EN TIEMPO REAL
+        async function loadMonitorData() {
+            try {
+                const res = await fetch(`${API_URL}/monitor`, { headers: { 'x-admin-code': adminCode } });
+                const data = await res.json();
+                
+                document.getElementById('monitor-last-update').textContent = `Última actualización: ${data.lastUpdate}`;
+                
+                // Resumen general
+                const summary = data.summary;
+                document.getElementById('monitor-summary').innerHTML = `
+                    <div class="stats-grid" style="margin-bottom: 0;">
+                        <div class="stat-card">
+                            <div class="stat-number">${summary.total}</div>
+                            <div class="stat-label">Total Estudiantes</div>
+                        </div>
+                        <div class="stat-card" style="border-color: #10b981;">
+                            <div class="stat-number" style="color: #10b981;">${summary.voted}</div>
+                            <div class="stat-label">Han Votado ✓</div>
+                        </div>
+                        <div class="stat-card" style="border-color: #f59e0b;">
+                            <div class="stat-number" style="color: #f59e0b;">${summary.pending}</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                        <div class="stat-card" style="border-color: #3b82f6;">
+                            <div class="stat-number">${summary.participation}%</div>
+                            <div class="stat-label">Participación</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Por curso (agrupado por grado)
+                const coursesByGrade = {};
+                data.courses.forEach(c => {
+                    if (!coursesByGrade[c.grade]) coursesByGrade[c.grade] = [];
+                    coursesByGrade[c.grade].push(c);
+                });
+                
+                let coursesHTML = '';
+                for (const [grade, courses] of Object.entries(coursesByGrade).sort((a, b) => a[0] - b[0])) {
+                    coursesHTML += `
+                        <div class="grade-section">
+                            <div class="grade-title">Grado ${grade}°</div>
+                            <div class="monitor-grid">
+                                ${courses.map(c => `
+                                    <div class="monitor-card ${c.voted > 0 ? 'voted' : ''}">
+                                        <div class="monitor-header">
+                                            <span class="monitor-title">Curso ${c.course}</span>
+                                            <span style="color: ${c.participation === 100 ? '#10b981' : c.participation > 50 ? '#f59e0b' : '#ef4444'}; font-weight: bold;">
+                                                ${c.participation}%
+                                            </span>
+                                        </div>
+                                        <div class="monitor-stats">
+                                            <span>✓ ${c.voted} votaron</span>
+                                            <span>○ ${c.pending} pendientes</span>
+                                            <span>Total: ${c.total}</span>
+                                        </div>
+                                        <div class="progress-bar" style="margin-top: 0.5rem; height: 8px;">
+                                            <div class="progress-fill" style="width: ${c.participation}%; background: ${c.participation === 100 ? '#10b981' : '#3b82f6'};"></div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                document.getElementById('monitor-courses').innerHTML = coursesHTML || '<p>No hay datos de cursos</p>';
+                
+                // Por grado (tabla consolidada)
+                document.getElementById('monitor-grades').innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Grado</th>
+                                <th>Total Estudiantes</th>
+                                <th>Han Votado</th>
+                                <th>Pendientes</th>
+                                <th>Participación</th>
+                                <th>Progreso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.grades.map(g => `
+                                <tr>
+                                    <td><strong>${g.grade}°</strong></td>
+                                    <td>${g.total}</td>
+                                    <td style="color: #10b981; font-weight: 600;">${g.voted}</td>
+                                    <td style="color: ${g.pending > 0 ? '#f59e0b' : '#64748b'};">${g.pending}</td>
+                                    <td><strong>${g.participation}%</strong></td>
+                                    <td style="width: 200px;">
+                                        <div class="progress-bar" style="height: 20px;">
+                                            <div class="progress-fill" style="width: ${g.participation}%; background: ${g.participation === 100 ? '#10b981' : g.participation > 50 ? '#3b82f6' : '#f59e0b'};"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+            } catch (err) { 
+                console.error('Error en monitoreo:', err);
+                document.getElementById('monitor-courses').innerHTML = '<p style="color: #ef4444;">Error al cargar datos. Intenta de nuevo.</p>';
+            }
+        }
+
+        // RESULTADOS FINALES
+        async function loadFinalResults() {
+            try {
+                const res = await fetch(`${API_URL}/results`, { headers: { 'x-admin-code': adminCode } });
+                const data = await res.json();
+                
+                const container = document.getElementById('final-results-content');
+                const statusDiv = document.getElementById('results-status');
+                
+                // Verificar si la votación está cerrada
+                const statusRes = await fetch(`${API_URL}/check-status`);
+                const statusData = await statusRes.json();
+                
+                if (statusData.open) {
+                    statusDiv.innerHTML = `
+                        <div class="results-closed">
+                            ⚠️ <strong>La votación aún está abierta</strong><br>
+                            Los resultados finales se mostrarán cuando cierres la votación desde el Dashboard.
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="results-open">
+                            ✅ <strong>Votación cerrada</strong> - Resultados oficiales
+                        </div>
+                    `;
+                }
+                
+                if (data.totalVotes === 0) {
+                    container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #64748b;">No hay votos registrados aún.</p>';
+                    return;
+                }
+                
+                // Mostrar ganador(es)
+                let winnerHTML = '';
+                if (data.winners && data.winners.length > 0) {
+                    if (data.isTie) {
+                        winnerHTML = `
+                            <div class="winner-card">
+                                <div class="winner-trophy">🏆</div>
+                                <h3>¡EMPATE!</h3>
+                                <p>Los ganadores con ${data.winners[0].votes} votos cada uno:</p>
+                                <h2>${data.winners.map(w => w.name).join(' / ')}</h2>
+                            </div>
+                        `;
+                    } else {
+                        winnerHTML = `
+                            <div class="winner-card">
+                                <div class="winner-trophy">🏆</div>
+                                <h3>¡GANADOR!</h3>
+                                <h2>${data.winners[0].name}</h2>
+                                <p style="font-size: 1.25rem; margin-top: 0.5rem;">${data.winners[0].votes} votos (${data.winners[0].percentage}%)</p>
+                                ${data.winners[0].party ? `<p>Partido: ${data.winners[0].party}</p>` : ''}
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Tabla de resultados completos
+                const resultsHTML = `
+                    <h3>Resultados Detallados</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Candidato</th>
+                                <th>Partido/Lista</th>
+                                <th>Votos</th>
+                                <th>Porcentaje</th>
+                                <th>Visual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.results.map((r, index) => `
+                                <tr style="${index === 0 ? 'background: #fef3c7; font-weight: bold;' : ''}">
+                                    <td>${index + 1}°</td>
+                                    <td>${r.name}</td>
+                                    <td>${r.party || '-'}</td>
+                                    <td style="font-size: 1.1rem;">${r.votes}</td>
+                                    <td><strong>${r.percentage}%</strong></td>
+                                    <td style="width: 150px;">
+                                        <div class="progress-bar" style="height: 20px;">
+                                            <div class="progress-fill" style="width: ${r.percentage}%; background: ${index === 0 ? '#f59e0b' : index === 1 ? '#64748b' : index === 2 ? '#b45309' : '#3b82f6'};"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div class="card" style="margin-top: 2rem; text-align: center;">
+                        <h3>Estadísticas de la Elección</h3>
+                        <div class="stats-grid" style="margin-top: 1rem;">
+                            <div class="stat-card">
+                                <div class="stat-number">${data.totalVotes}</div>
+                                <div class="stat-label">Total Votos Válidos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${data.totalStudents}</div>
+                                <div class="stat-label">Electores Habilitados</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${data.totalVoted}</div>
+                                <div class="stat-label">Votantes Efectivos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${data.participation}%</div>
+                                <div class="stat-label">Participación</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button onclick="window.print()" class="btn btn-primary" style="width: auto;">🖨️ Imprimir Resultados</button>
+                    </div>
+                `;
+                
+                container.innerHTML = winnerHTML + resultsHTML;
+                
+            } catch (err) { 
+                console.error('Error cargando resultados:', err);
+                document.getElementById('final-results-content').innerHTML = '<p style="color: #ef4444; text-align: center;">Error al cargar resultados. Intenta de nuevo.</p>';
+            }
         }
 
         async function toggleElection() {
@@ -469,100 +682,202 @@
             catch (err) { alert('Error'); }
         }
 
+        // IMPORTACIÓN DE EXCEL CORREGIDA
         document.getElementById('excel-file')?.addEventListener('change', handleFileSelect);
 
         function handleFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
+            
             document.getElementById('file-name').textContent = file.name;
+            document.getElementById('import-debug').style.display = 'none';
+            
             const reader = new FileReader();
+            
             reader.onload = function(e) {
                 try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-                    processExcelData(jsonData);
-                } catch (err) { alert('Error al leer archivo: ' + err.message); }
+                    let data;
+                    const fileData = e.target.result;
+                    
+                    // Detectar si es CSV o Excel
+                    if (file.name.endsWith('.csv')) {
+                        // Procesar CSV
+                        const text = new TextDecoder('utf-8').decode(fileData);
+                        const lines = text.split('\n');
+                        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+                        const rows = [];
+                        
+                        for (let i = 1; i < lines.length; i++) {
+                            if (!lines[i].trim()) continue;
+                            const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+                            const row = {};
+                            headers.forEach((h, idx) => row[h] = values[idx]);
+                            rows.push(row);
+                        }
+                        data = rows;
+                    } else {
+                        // Procesar Excel
+                        const workbook = XLSX.read(fileData, { type: 'array' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        data = XLSX.utils.sheet_to_json(firstSheet);
+                    }
+                    
+                    console.log('Datos crudos del archivo:', data);
+                    document.getElementById('import-debug').style.display = 'block';
+                    document.getElementById('import-debug').textContent = 'Columnas detectadas: ' + Object.keys(data[0] || {}).join(', ');
+                    
+                    processExcelData(data);
+                    
+                } catch (err) { 
+                    console.error('Error:', err);
+                    alert('Error al leer archivo: ' + err.message); 
+                }
             };
-            reader.readAsArrayBuffer(file);
+            
+            if (file.name.endsWith('.csv')) {
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
         }
 
         function processExcelData(data) {
+            if (!Array.isArray(data) || data.length === 0) {
+                alert('El archivo está vacío o no tiene el formato correcto');
+                return;
+            }
+
+            // Mapear con flexibilidad de nombres de columnas
             const mapped = data.map((row, index) => {
-                const keys = Object.keys(row);
-                const nameKey = keys.find(k => k.toLowerCase().includes('nombre') || k.toLowerCase().includes('name') || k.toLowerCase().includes('estudiante'));
-                const gradeKey = keys.find(k => k.toLowerCase().includes('grado') || k.toLowerCase().includes('curso') || k.toLowerCase().includes('nivel'));
-                const courseKey = keys.find(k => k.toLowerCase().includes('paralelo') || k.toLowerCase().includes('sección') || k.toLowerCase().includes('course') || k.toLowerCase().includes('aula'));
-                const listKey = keys.find(k => k.toLowerCase().includes('lista') || k.toLowerCase().includes('número') || k.toLowerCase().includes('numero') || k.toLowerCase().includes('list'));
-                return { full_name: row[nameKey] || '', grade: parseInt(row[gradeKey]) || 0, course: parseInt(row[courseKey]) || 0, list_number: parseInt(row[listKey]) || (index + 1), raw: row };
-            }).filter(s => s.full_name && s.grade > 0 && s.course > 0);
+                // Buscar campos con diferentes posibles nombres
+                const findField = (possibleNames) => {
+                    for (const name of possibleNames) {
+                        // Buscar exacto
+                        if (row[name] !== undefined) return row[name];
+                        // Buscar case-insensitive
+                        const key = Object.keys(row).find(k => k.toLowerCase() === name.toLowerCase());
+                        if (key) return row[key];
+                    }
+                    return undefined;
+                };
+
+                const nombre = findField(['Nombre', 'Name', 'Estudiante', 'Alumno', 'Apellidos y Nombres', 'Apellido y Nombre', 'APELLIDOS Y NOMBRES', 'APELLIDO Y NOMBRE', 'Estudiante']);
+                const grado = findField(['Grado', 'Grade', 'Nivel', 'Curso', 'Año', 'GRADO', 'Grado/Nivel']);
+                const curso = findField(['Curso', 'Paralelo', 'Sección', 'Seccion', 'Aula', 'Course', 'CURSO', 'PARALELO', 'SECCION']);
+                const lista = findField(['Lista', 'List', 'Número', 'Numero', 'No', 'No.', 'Nro', 'Nro.', 'LISTA', 'NÚMERO', 'NUMERO']);
+
+                return {
+                    full_name: nombre ? String(nombre).trim() : '',
+                    grade: parseInt(grado) || 0,
+                    course: parseInt(curso) || 1,
+                    list_number: parseInt(lista) || (index + 1),
+                    _original: row
+                };
+            }).filter(s => s.full_name && s.grade > 0);
+
+            console.log('Mapeados:', mapped);
             
             excelData = mapped;
+            
             const preview = document.getElementById('import-preview');
-            preview.innerHTML = `<p><strong>${mapped.length} estudiantes válidos:</strong></p><table style="margin-top: 0.5rem; font-size: 0.875rem;"><thead><tr><th>Nombre</th><th>Grado</th><th>Curso</th><th>Lista</th><th>Código</th></tr></thead><tbody>
-                ${mapped.slice(0, 5).map(s => `<tr><td>${s.full_name}</td><td>${s.grade}</td><td>${s.course}</td><td>${s.list_number}</td><td><code>${s.grade}${s.course}${String(s.list_number).padStart(2, '0')}</code></td></tr>`).join('')}
-                ${mapped.length > 5 ? `<tr><td colspan="5">... y ${mapped.length - 5} más</td></tr>` : ''}
-            </tbody></table>`;
+            if (mapped.length === 0) {
+                preview.innerHTML = '<p style="color: #ef4444;">⚠️ No se encontraron estudiantes válidos. Verifica que las columnas tengan los nombres correctos.</p>';
+                document.getElementById('btn-import').style.display = 'none';
+                return;
+            }
+            
+            preview.innerHTML = `
+                <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                    ✅ <strong>${mapped.length} estudiantes válidos encontrados</strong> de ${data.length} filas
+                </div>
+                <h4>Vista previa (primeros 5):</h4>
+                <table style="margin-top: 0.5rem; font-size: 0.875rem;">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Grado</th>
+                            <th>Curso</th>
+                            <th>Lista</th>
+                            <th>Código que se generará</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${mapped.slice(0, 5).map(s => `
+                            <tr>
+                                <td>${s.full_name}</td>
+                                <td>${s.grade}</td>
+                                <td>${s.course}</td>
+                                <td>${s.list_number}</td>
+                                <td><code style="background: #e2e8f0; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">${s.grade}${s.course}${String(s.list_number).padStart(2, '0')}</code></td>
+                            </tr>
+                        `).join('')}
+                        ${mapped.length > 5 ? `<tr><td colspan="5" style="text-align: center; color: #64748b;">... y ${mapped.length - 5} más</td></tr>` : ''}
+                    </tbody>
+                </table>
+            `;
             document.getElementById('btn-import').style.display = 'block';
         }
 
         async function importStudents() {
             if (excelData.length === 0) return;
-            const btn = document.getElementById('btn-import'); btn.disabled = true; btn.textContent = 'Importando...';
+            
+            const btn = document.getElementById('btn-import'); 
+            btn.disabled = true; 
+            btn.innerHTML = '<span class="loading" style="display: inline-block; width: 16px; height: 16px; border: 2px solid #ffffff; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 0.5rem;"></span> Importando...';
+            
             try {
-                const res = await fetch(`${API_URL}/admin/import`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-code': adminCode }, body: JSON.stringify({ students: excelData, admin_code: adminCode }) });
-                const result = await res.json();
-                const resultDiv = document.getElementById('import-result');
-                resultDiv.innerHTML = `<div class="card" style="margin-top: 1rem; background: ${result.errors ? '#fef3c7' : '#ecfdf5'};"><p><strong>Importados:</strong> ${result.imported} de ${result.total}</p>${result.errors ? `<p style="color: #92400e;"><strong>Errores:</strong> ${result.errors.length}</p>` : ''}</div>`;
-                if (result.imported > 0) { excelData = []; document.getElementById('btn-import').style.display = 'none'; document.getElementById('excel-file').value = ''; }
-            } catch (err) { alert('Error al importar: ' + err.message); }
-            finally { btn.disabled = false; btn.textContent = 'Importar Estudiantes'; }
-        }
-
-        async function generateCarnets() {
-            try {
-                const res = await fetch(`${API_URL}/carnets`, { headers: { 'x-admin-code': adminCode } });
-                const data = await res.json();
+                console.log('Enviando:', excelData);
                 
-                if (!data.students || data.students.length === 0) {
-                    alert('No hay estudiantes importados');
+                const res = await fetch(`${API_URL}/admin/import`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'x-admin-code': adminCode }, 
+                    body: JSON.stringify({ students: excelData, admin_code: adminCode }) 
+                });
+                
+                const result = await res.json();
+                console.log('Respuesta:', result);
+                
+                const resultDiv = document.getElementById('import-result');
+                
+                if (!res.ok) {
+                    resultDiv.innerHTML = `<div class="card" style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; margin-top: 1rem;">
+                        <strong>Error:</strong> ${result.error || 'Error desconocido'}<br>
+                        ${result.details ? `<small>${result.details.join('<br>')}</small>` : ''}
+                    </div>`;
                     return;
                 }
-
-                const container = document.getElementById('carnets-container');
-                const printArea = document.getElementById('print-area');
                 
-                const carnetHTML = data.students.map(s => `
-                    <div class="carnet-preview">
-                        <div class="carnet-header">
-                            ${data.school_logo ? `<img src="${data.school_logo}" class="carnet-logo" onerror="this.style.display='none'">` : ''}
-                            <div>
-                                <div class="carnet-school">${data.school_name || 'COLEGIO'}</div>
-                                <div class="carnet-title">Carné Electoral</div>
-                            </div>
-                        </div>
-                        <div class="carnet-body">
-                            <div class="carnet-photo">
-                                Foto<br>Estudiante
-                            </div>
-                            <div class="carnet-info">
-                                <div class="carnet-name">${s.full_name}</div>
-                                <div>Grado: ${s.grade}° | Curso: ${s.course}</div>
-                                <div>Lista: ${s.list_number}</div>
-                                <div class="carnet-code">${s.access_code}</div>
-                            </div>
-                        </div>
-                        <div class="carnet-footer">Votación Escolar 2025</div>
+                resultDiv.innerHTML = `
+                    <div class="card" style="background: ${result.hasErrors ? '#fef3c7' : '#dcfce7'}; border: 2px solid ${result.hasErrors ? '#f59e0b' : '#22c55e'}; margin-top: 1rem;">
+                        <h4>✅ Importación completada</h4>
+                        <p><strong>Importados:</strong> ${result.imported} de ${result.total} estudiantes</p>
+                        <p><strong>Válidos encontrados:</strong> ${result.valid}</p>
+                        ${result.hasErrors ? `<p style="color: #92400e;"><strong>Advertencias:</strong> ${result.errors.length} filas con problemas</p>
+                        <details>
+                            <summary>Ver detalles</summary>
+                            <ul style="margin-top: 0.5rem; font-size: 0.875rem;">
+                                ${result.errors.map(e => `<li>${e}</li>`).join('')}
+                            </ul>
+                        </details>` : ''}
                     </div>
-                `).join('');
-
-                container.innerHTML = `<h3>Vista previa (${data.students.length} carnets):</h3>` + carnetHTML;
-                printArea.innerHTML = carnetHTML;
+                `;
+                
+                if (result.imported > 0) { 
+                    excelData = []; 
+                    document.getElementById('btn-import').style.display = 'none'; 
+                    document.getElementById('excel-file').value = '';
+                }
                 
             } catch (err) { 
-                alert('Error al generar carnets: ' + err.message);
-                console.error(err);
+                console.error('Error:', err);
+                document.getElementById('import-result').innerHTML = `
+                    <div class="card" style="background: #fee2e2; border: 2px solid #ef4444; color: #991b1b; margin-top: 1rem;">
+                        <strong>Error de conexión:</strong> ${err.message}
+                    </div>
+                `;
+            } finally { 
+                btn.disabled = false; 
+                btn.textContent = '✅ Importar Estudiantes'; 
             }
         }
     </script>
