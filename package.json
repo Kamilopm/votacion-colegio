@@ -1,12 +1,16 @@
 {
-  "name": "school-vote-system-internet",
-  "version": "3.0.0",
-  "private": true,
-  "description": "Sistema de votación escolar (Vercel + Supabase)",
-  "type": "commonjs",
+  "name": "school-voting-system",
+  "version": "1.0.0",
+  "description": "Sistema de Votación Escolar - Vercel + Supabase",
+  "main": "api/[...path].js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.1",
-    "pdfkit": "^0.13.0",
-    "qrcode": "^1.5.3"
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
